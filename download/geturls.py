@@ -53,7 +53,7 @@ class  GetUrls():
             else:
                 link = item.get('href')
                 if link[0:4] != 'http':
-                        if link[0]== '/':
+                        if link[0]== '/' or link[0:3]=='../':
                             continue
                         else:
                             link = rootlink + link
