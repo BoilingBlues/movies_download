@@ -34,7 +34,7 @@ class DownLoad():
             start=start + os.path.getsize(file_dst)
 
         header = {
-            "Range":f"bytes={start}-{end}"
+            "Range":"bytes={start}-{end}"
         }
         #断点请求
         try:
@@ -107,23 +107,23 @@ class DownLoad():
                     end = file_size
                 print('%d,%d,\n'%(start,end))
                 #添加下载线程
-                thread.append(threading.Thread(target=download_videofile,args=(i,start,end)))
+                thread.append(threading.Thread(target=self.download_videofile,args=(i,start,end)))
                 thread[i].start()
 
             #添加进度条线程
-            pbar_thread = threading.Thread(target=p_bar,args=(file_size))
+            pbar_thread = threading.Thread(target=self.p_bar,args=[file_size])
             pbar_thread.start()
             #等待进度条线程运行结束
             pbar_thread.join()
             #判断文件是否完整下载
             download_size = 0
-            for i in range(self.th_num)
+            file_name = self.link.split('/')[-1]
+            for i in range(self.th_num):
                 pach_file_dst = self.root+file_name+str(i)
                 if os.path.exists(pach_file_dst):
-                    download_size += os.path.getsize(file_dst)
+                    download_size += os.path.getsize(pach_file_dst)
             if download_size == file_size:
                 #合并文件
-                file_name = self.link.split('/')[-1]
                 file_dst = self.root+file_name
                 with open(file_dst,'ab') as f:
                     for i in range(self.th_num):
@@ -137,10 +137,13 @@ class DownLoad():
         return
 
 
+        
+
+
 
 
 
 if  __name__ == "__main__":
-    l = 'http://185.105.101.95/S/Love.Death.and.Robots/S01/480p.x264.WEB-DL/Love.Death.and.Robots.S01E01.480p.WEB-DL.mkv'
+    l = 'http://lab.nqnwebs.com/descargas/Friends/Friends%20-%20S01E01%20-%20The%20One%20Where%20Monica%20Gets%20A%20Roommate.mp4'
     download = DownLoad('C:\\Users\\shijiangze\\.a\\movies_download\\download\\',5,l)
     download.multi_th_down()
