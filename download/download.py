@@ -34,14 +34,15 @@ class DownLoad():
             start=start + os.path.getsize(file_dst)
 
         header = {
-            "Range":"bytes={start}-{end}"
+            "Range":"bytes={0}-{1}".format(start,end)
         }
+        print(header)
         #断点请求
         try:
             response = requests.get(self.link,headers=header,stream=True)
             #下载文件
             print("正在下载%s" %file_name)
-            with open(file_dst,'wb') as f:
+            with open(file_dst,'ab') as f:
                 for chunk in response.iter_content(chunk_size=1024):
                     if chunk:
                         f.write(chunk)
@@ -89,6 +90,7 @@ class DownLoad():
         try:
             response = requests.get(self.link,stream=True)
             file_size = int(response.headers['content-length'])
+            print(file_size)
             response.close()
 
         except:
@@ -96,7 +98,7 @@ class DownLoad():
 
         else:
             #分pach下载
-            pach_size = (file_size-(file_size%self.th_num))/self.th_num
+            pach_size = file_size//self.th_num
             thread = []
             for i in range(self.th_num):
                 if i != self.th_num-1:
@@ -144,6 +146,6 @@ class DownLoad():
 
 
 if  __name__ == "__main__":
-    l = 'http://lab.nqnwebs.com/descargas/Friends/Friends%20-%20S01E01%20-%20The%20One%20Where%20Monica%20Gets%20A%20Roommate.mp4'
-    download = DownLoad('C:\\Users\\shijiangze\\.a\\movies_download\\download\\',5,l)
+    l = 'http://89.40.4.78/walking_dead/The.Walking.Dead.S09E01.HDTV.x264-SVA%5Bettv%5D.mkv'
+    download = DownLoad('./',5,l)
     download.multi_th_down()
