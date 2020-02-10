@@ -14,6 +14,7 @@ class  GetUrls():
         self.user_agent = settings.user_agent
         self.video_type = settings.video_type
         self.url_ban = settings.url_ban
+        self.ban_resolution = settings.ban_resolution
 
     def if_page(self,link):
         """判断链接是否为页面"""
@@ -59,8 +60,10 @@ class  GetUrls():
                             link = rootlink + link
                 if re.search(self.url_ban,link):
                     continue
+                if self.if_ban_resolution(link):
+                    continue
                 urls.append(link)
-        return set(urls)
+        return urls
 
     def get_all_video_urls_by_url(self,rooturl):
         """通过页面获取全站视频链接"""
@@ -85,7 +88,14 @@ class  GetUrls():
                     inside(link)
             return
         inside(rooturl)
-        return set(urls)
+        return urls
+
+    def if_ban_resolution(self,link):
+        if self.ban_resolution in link:
+            return True
+        else:
+            return False
+
 
 if __name__ == "__main__":
     get = GetUrls()
