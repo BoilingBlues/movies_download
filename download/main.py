@@ -1,4 +1,4 @@
-from download import DownLoad
+from downloader import DownLoad
 from geturls import GetUrls
 import os
 
