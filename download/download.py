@@ -146,6 +146,6 @@ class DownLoad():
 
 
 if  __name__ == "__main__":
-    l = 'http://89.40.4.78/walking_dead/The.Walking.Dead.S09E01.HDTV.x264-SVA%5Bettv%5D.mkv'
-    download = DownLoad('./',5,l)
+    l = 'http://mirror.as29550.net/releases.ubuntu.com/18.04.3/ubuntu-18.04.3-desktop-amd64.iso'
+    download = DownLoad('./',2,l)
     download.multi_th_down()

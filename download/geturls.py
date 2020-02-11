@@ -54,10 +54,11 @@ class  GetUrls():
             else:
                 link = item.get('href')
                 if link[0:4] != 'http':
-                        if link[0]== '/' or link[0:3]=='../':
+                    if link[0]== '/' or link[0:3]=='../':
+                        if not '.' in link.split('/')[-1]:
                             continue
-                        else:
-                            link = rootlink + link
+                    else:
+                        link = rootlink + link
                 if re.search(self.url_ban,link):
                     continue
                 if self.if_ban_resolution(link):
@@ -99,4 +100,4 @@ class  GetUrls():
 
 if __name__ == "__main__":
     get = GetUrls()
-    result = get.get_all_video_urls_by_url("http://lab.nqnwebs.com/descargas/")
+    result = get.get_all_video_urls_by_url("http://185.105.101.95/S/Love.Death.and.Robots/S01/1080p.x264.WEB-DL/")
