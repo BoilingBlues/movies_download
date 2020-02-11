@@ -53,16 +53,19 @@ class  GetUrls():
                 continue
             else:
                 link = item.get('href')
-                if link[0:4] != 'http':
-                    if link[0]== '/' or link[0:3]=='../':
-                        if not '.' in link.split('/')[-1]:
-                            continue
-                    else:
-                        link = rootlink + link
                 if re.search(self.url_ban,link):
                     continue
                 if self.if_ban_resolution(link):
                     continue
+                if not self.check_sub(rootlink,link):
+                    continue
+                else:
+                    if link[:4]!='http':
+                        if link[0]!='/':
+                            link = rootlink+link
+                        else:
+                            items = rootlink.split('/')
+                            link = items[0] + '//' + items[2] + link
                 urls.append(link)
         return urls
 
@@ -77,6 +80,7 @@ class  GetUrls():
                 return
             if not self.if_page(url) or url in gettedurls:
                 return
+            somelinks=[]
             try:
                 content = self.__get_content_by_url(url)
                 somelinks = self.get_all_urls_from_content(content,url)
@@ -98,6 +102,48 @@ class  GetUrls():
             return False
 
 
+    def check_sub(self,current,link):
+        if link[:4]=='http':
+            if link[-1]=='/':
+                if len(current.split('/'))>=len(link.split('/')):
+                    return False
+                else:
+                    if current.split('/')[:-1]==link.split('/')[:len(current.split('/'))-1]:
+                        return True
+                    else:
+                        return False
+            else:
+                if len(current.split('/'))>len(link.split('/')):
+                    return False
+                else:
+                    if current.split('/')[:-1]==link.split('/')[:len(current.split('/'))-1]:
+                        return True
+                    else:
+                        return False
+        elif link[0:3]=='../':
+            return False
+        else:
+            if link[0]!='/':
+                return True
+            else:
+                if link[-1]=='/':
+                    if len(current.split('/')[3:])>=len(link.split('/'))-1:
+                        return False
+                    else:
+                        if current.split('/')[3:-1]==link.split('/')[1:len(current.split('/'))-3]:
+                            return True
+                        else:
+                            return False
+                else:
+                    if len(current.split('/')[3:])>len(link.split('/'))-1:
+                        return False
+                    else:
+                        if current.split('/')[3:-1]==link.split('/')[1:len(current.split('/'))-3]:
+                            return True
+                        else:
+                            return False
+
+
 if __name__ == "__main__":
     get = GetUrls()
-    result = get.get_all_video_urls_by_url("http://185.105.101.95/S/Love.Death.and.Robots/S01/1080p.x264.WEB-DL/")
+    result = get.get_all_video_urls_by_url("https://www.96dmd.com/shipin/")
